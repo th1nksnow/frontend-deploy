@@ -1,18 +1,30 @@
 
 ---
 
-- name: Build and run
+- name: Build, Contain and Run
   hosts: 127.0.0.1
-  
-  
+
+
   tasks:
-  
-  - name: Build
+ 
+  - name: Build image
     docker_image:
       name: nodenginx_image:v1.0
       build:
         path: /home/{{ ansible_user_id }}/project1/frontend-deploy        
       source: build
- 
+
+  - name: Container creating
+    docker_container:
+      name: nodenginx_container
+      image: nodenginx_image:v1.0
+      state: present
+
+  - name: Run
+    docker_container:
+      name: nodenginx_container
+      ports: 80:80
+      state: started
+
 ...
 
